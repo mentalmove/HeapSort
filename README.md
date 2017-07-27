@@ -34,4 +34,4 @@ It must swap its place with the last element; after that, the collection's size
 will be reduced by one (making the last element untouchable); then potential
 violations of the heap rules (caused by the new first element) must be corrected.
 
-
+This process will be repeated until the touchable collection's size is one.
