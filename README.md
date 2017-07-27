@@ -35,3 +35,10 @@ will be reduced by one (making the last element untouchable); then potential
 violations of the heap rules (caused by the new first element) must be corrected.
 
 This process will be repeated until the touchable collection's size is one.
+
+## Efficiency
+Heap Sort uses a lot of steps; it therefore is
+relatively slow when used with smaller collections.  
+Interestingly, the number of used steps increases only very little
+when increasing the number of values to be sorted;
+it is a reasonable alternative for large collections.
