@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Heap Sort</title>
+        
+        <style type="text/css">
+            html, body {
+                margin: 0px;
+                font-family: Arial, Verdana;
+                font-size: 18px;
+                text-align: center;
+                background-color: #F8F8F8;
+            }
+            
+            .sector_left {
+                float: left;
+                width: 50%;
+            }
+            .sector_right {
+                float: right;
+                width: 50%;
+            }
+        </style>
+        
+        <!--<script type="text/javascript" src="algorithm.js"></script>-->
+        
+    </head>
+    <body>
+        
+        <br>
+        
+        <script type="text/javascript">
+            
+            function return_card (index, bg_col) {
+                var colour_index = parseInt(index / (num_cards / colours.length));
+                var symbol_index = parseInt(index / (num_cards / symbols.length));
+                var card_index = index % cards.length;
+                var card = "<span style='color: " + colours[colour_index];
+                var space = "";
+                if ( bg_col ) {
+                    space = "&nbsp;";
+                    card += "; background-color: " + bg_col + "; border-radius: 18px;";
+                }
+                card += "'>" + space + symbols[symbol_index] + cards[card_index] + space + "</span>";
+                return card;
+            }
+            function show_linear () {
+                var content = return_card(values[0]);
+                var space = "&nbsp;";
+                
+                for ( var i = 1; i < values.length; i++ )
+                    content += space + return_card(values[i], undefined);
+                
+                return content;
+            }
+            function show_tree (colour_collection) {
+                
+                var cols = colour_collection || {};
+                var base = document.createElement("div");
+                base.innerHTML = return_card(values[0], cols[0]) + "<br>";
+                
+                var leave_border = parseInt(amount / 2);
+                
+                var elements = [ base ];
+                
+                var child, parent_index, inner_html, colour;
+                for ( var i = 1; i < values.length; i++ ) {
+                    child = document.createElement("div");
+                    child.className = (i % 2) ? "sector_left" : "sector_right";
+                    colour = cols[i];
+                    if ( !colour ) {
+                        if ( i >= leave_border && i < amount )
+                            colour = "#ECECEC; opacity: 0.7";
+                    }
+                    inner_html = return_card(values[i], colour);                    
+                    child.innerHTML = inner_html + "<br>";
+                    elements.push(child);
+                    parent_index = Math.ceil(i / 2) - 1;
+                    elements[parent_index].appendChild(child);
+                }
+                
+                var after = document.createElement("div");
+                after.style.clear = "both";
+                after.innerHTML = "&nbsp;";
+                base.appendChild(after);
+                
+                return base;
+            }
+            
+            function show_solution () {
+                console.log( "---" );
+                console.log( values );
+                amount = num_cards - 1;
+                tree = show_tree();
+                centre2.appendChild(tree);
+                layer.innerHTML += "<br>" + show_linear() + "<br><br>";
+                layer.scrollIntoView(false);
+            }
+            
+            function downheap (index, gray) {
+                
+                var col = (gray) ? "#CCCCCC" : "#88FF88";
+                
+                var left_index = 2 * index + 1;
+                var right_index = (left_index + 1 < amount) ? (left_index + 1) : -1;
+                var value = values[index];
+                var left_child = values[left_index];
+                var right_child = (right_index == -1) ? (0 - Number.MAX_VALUE) : values[right_index];
+                
+                var large_index = (left_child >= right_child) ? left_index : right_index;
+                var large = values[large_index];
+                
+                if ( value >= large )
+                    return;
+                
+                values[large_index] = value;
+                values[index] = large;
+                
+                console.log( values );
+                
+                var colour_collection = {};
+                colour_collection[large_index] = "#C8C8FF";
+                colour_collection[index] = col;
+                var tree = show_tree(colour_collection);
+                actual_layer.appendChild(tree);
+                
+                if ( large_index < parseInt(amount / 2) )
+                    downheap(large_index, true);
+            }
+            
+            function heapsort () {
+                
+                amount--;
+                var tmp = values[amount];
+                values[amount] = values[0];
+                values[0] = tmp;
+                
+                console.log( values );
+                
+                var colour_collection = {};
+                colour_collection[amount] = "#CCCCCC";
+                colour_collection[0] = "#88FF88";
+                var tree = show_tree(colour_collection);
+                actual_layer.appendChild(tree);
+                tree.scrollIntoView(true);
+                
+                if ( amount > 1 )
+                    downheap(0, true);
+                
+                if ( amount > 1 )
+                    setTimeout(heapsort, TIMEOUT);
+                else {
+                    setTimeout(show_solution, (2 * TIMEOUT));
+                }
+            }
+            
+            function build_heap (index) {
+                
+                var colour_collection = {};
+                colour_collection[index] = "#9898FF";
+                colour_collection[2 * index + 1] = "#98FF98";
+                if ( 2 * index + 2 < amount )
+                    colour_collection[2 * index + 2] = "#98FF98";
+                var tree = show_tree(colour_collection);
+                actual_layer.appendChild(tree);
+                tree.scrollIntoView(true);
+                
+                downheap(index);
+                
+                if ( index > 0 )
+                    setTimeout(build_heap, TIMEOUT, (index - 1));
+                else {
+                    actual_layer.scrollIntoView(false);
+                    actual_layer = right;
+                    console.log( "---" );
+                    setTimeout(heapsort, TIMEOUT);
+                }
+            }
+        
+            function create_indices (amount) {
+                
+                var source = [];
+                var target = [];
+                var i, random_index;
+
+                for ( i = 0; i < amount; i++ )
+                    source.push(i);
+
+                while ( source.length > 1 ) {
+                    random_index = Math.floor(Math.random() * source.length);
+                    target.push(source[random_index]);
+                    source.splice(random_index, 1);
+                }
+
+                return target;
+            }
+            
+            var TIMEOUT = 101;
+            
+            var colours = [ "red", "black" ];
+            var symbols = [ "&diams;", "&hearts;", "&spades;", "&clubs;" ];
+            var cards = [ "7", "8", "9", "10", "J", "Q", "K", "A" ];
+            
+            var num_cards = symbols.length * cards.length;
+            var amount = num_cards - 1;
+            
+            var values = create_indices(num_cards);
+            
+            /*  */
+            
+            var tree;
+            
+            var layer = document.body;
+            layer.innerHTML += show_linear();
+            
+            console.log( values );
+            console.log( "---" );
+            
+            var centre = document.createElement("div");
+            centre.style.marginTop = "27px";
+            layer.appendChild(centre);
+            var left = document.createElement("div");
+            left.className = "sector_left";
+            left.style.marginTop = "18px";
+            layer.appendChild(left);
+            var right = document.createElement("div");
+            right.className = "sector_right";
+            right.style.marginTop = "18px";
+            right.style.boxShadow = "1px 0 0 #E8E8E8 inset";
+            layer.appendChild(right);
+            var centre2 = document.createElement("div");
+            centre2.style.clear = "both";
+            centre2.innerHTML = "<br>";
+            layer.appendChild(centre2);
+            
+            tree = show_tree();
+            centre.appendChild(tree);
+            
+            var actual_layer = left;
+            
+            setTimeout(build_heap, (4 * TIMEOUT), (parseInt(amount / 2) - 1));
+            
+            
+        </script>
+        
+    </body>
+</html>
