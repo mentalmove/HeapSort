@@ -20,4 +20,8 @@ while element at index (2 * x + 2) potentially not exists.
 A tree is called a heap when all children are not greater than their parents.
 
 ## Create a heap
-Each parent having a child greater than itself has to swap its place with its greatest child.
+Each parent having a child greater than itself has to swap its place with its greatest child.  
+To create a heap efficiently, one should start with the last element having children
+and iterate towards the first element;
+if swapping was necessary, the process has to be repeated
+with the former parent (now placed at index of the formerly greatest child).
