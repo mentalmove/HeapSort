@@ -16,3 +16,6 @@ element at index 2 has children at index 5 and index 6 etc.
 That leads to general expression  
 Element at index x has children at index (2 * x + 1) and index (2 * x + 2)  
 while element at index (2 * x + 2) potentially not exists.
+
+
+A tree is called a heap when all parents are greater than their children.
