@@ -27,3 +27,11 @@ if swapping was necessary, the process has to be repeated
 with the former parent (now placed at index of the formerly greatest child).
 
 When ready, the array is partially sorted.
+
+## Sort a heap
+The first element in a heap is known to be the greatest of the complete collection.
+It must swap its place with the last element; after that, the collection's size
+will be reduced by one (making the last element untouchable); then potential
+violations of the heap rules (caused by the new first element) must be corrected.
+
+
