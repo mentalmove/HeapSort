@@ -25,3 +25,5 @@ To create a heap efficiently, one should start with the last element having chil
 and iterate towards the first element;
 if swapping was necessary, the process has to be repeated
 with the former parent (now placed at index of the formerly greatest child).
+
+When ready, the array is partially sorted.
