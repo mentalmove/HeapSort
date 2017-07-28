@@ -1,8 +1,8 @@
 # HeapSort
 
-index.html visualises how Heap Sort works in general
+**index.html** visualises how *Heap Sort* works in general
 
-algorithm.js is a possible Javascript implementation
+**algorithm.js** is a possible Javascript implementation
 
 ## About heaps
 Heap Sort is part of the family of tree sort algorithms.
